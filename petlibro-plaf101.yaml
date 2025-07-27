@@ -3,7 +3,7 @@ esphome:
   friendly_name: Petlibro PLAF101
 
 esp8266:
-    board: d1
+    board: d1_mini
 
 # Enable logging
 logger:
