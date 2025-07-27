@@ -3,11 +3,11 @@ name: Status
 on:
   push:
     branches:
-      - 'main'
+      - "main"
   pull_request:
 
 jobs:
-  validate_config:
+  config:
     name: Validate ESPHome configuration
     runs-on: ubuntu-latest
     steps:
@@ -15,10 +15,26 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
+          python-version: "3.12"
+          cache: "pip"
 
       - run: pip install -r requirements.txt
 
       - name: Validate ESPHome config
         run: esphome config petlibro-plaf101.yaml
+
+  compile:
+    name: Compile ESPHome build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - run: pip install -r requirements.txt
+
+      - name: Compile ESPHome build
+        run: esphome compile petlibro-plaf101.yaml
