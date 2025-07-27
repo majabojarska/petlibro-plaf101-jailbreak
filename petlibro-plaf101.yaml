@@ -5,10 +5,14 @@ esphome:
 esp8266:
     board: d1_mini
 
-# Enable logging
 logger:
 
-# Enable Home Assistant API
+web_server:
+  port: 80
+  auth:
+    username: !secret web_server_username
+    password: !secret web_server_password
+
 api:
   encryption:
     # Change Key to any random string
