@@ -33,6 +33,20 @@ button:
     on_press:
       - logger.log: "Button pressed"
 
+binary_sensor:
+  - platform: gpio
+    pin: GPIO0
+    name: "REC_KEY"
+
+  # This resets flash, not mappable
+  # - platform: gpio
+  #   pin: GPIO07
+  #   name: "RESET_KEY"
+
+  - platform: gpio
+    pin: GPIO04
+    name: "FEED_KEY"
+
 sensor:
   - platform: uptime
     type: seconds
