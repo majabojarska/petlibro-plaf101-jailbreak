@@ -13,6 +13,8 @@ web_server:
     username: !secret web_server_username
     password: !secret web_server_password
 
+captive_portal:
+
 api:
   encryption:
     key: !secret api_encryption_key
@@ -44,7 +46,7 @@ binary_sensor:
   # - platform: gpio
   #   pin: GPIO2
   #   name: "GPIO2"
-  
+
   # - platform: gpio
   #   pin: GPIO3
   #   name: "GPIO3"
