@@ -4,6 +4,9 @@
 
 Guide and sources for jailbreaking the Petlibro PLAF101 pet feeder from the Tuya cloud.
 
+> [!NOTE]
+> This is a work in progress.
+
 ![](./img/readme.webp)
 
 ## Setup development environment
