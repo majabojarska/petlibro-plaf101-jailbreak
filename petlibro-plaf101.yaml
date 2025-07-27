@@ -49,6 +49,10 @@ binary_sensor:
   #   pin: GPIO3
   #   name: "GPIO3"
 
+  - platform: gpio
+    pin: GPIO04
+    name: "FEED_KEY (GPIO4)"
+
   # - platform: gpio
   #   pin: GPIO5
   #   name: "GPIO5"
@@ -96,16 +100,35 @@ binary_sensor:
   # - platform: gpio
   #   pin: GPIO16
   #   name: "GPIO16"
-  
+
   # - platform: gpio
   #   pin: GPIO07
   #   name: "Not usable - Flash Data 0 (GPIO7)"
 
-  - platform: gpio
-    pin: GPIO04
-    name: "FEED_KEY (GPIO4)"
 
 sensor:
   - platform: uptime
     type: seconds
     name: Uptime Sensor
+
+output:
+  - platform: gpio
+    pin:
+      number: GPIO02
+      mode: output
+    id: led_on_board
+    inverted: true
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode: output
+    id: led2_blue
+    inverted: true
+
+  - platform: gpio
+    pin:
+      number: GPIO16
+      mode: output
+    id: led1_red
+    inverted: true
