@@ -15,7 +15,6 @@ web_server:
 
 api:
   encryption:
-    # Change Key to any random string
     key: !secret api_encryption_key
 
 ota:
@@ -36,16 +35,75 @@ button:
 binary_sensor:
   - platform: gpio
     pin: GPIO0
-    name: "REC_KEY"
+    name: "REC_KEY (GPIO0)"
 
-  # This resets flash, not mappable
+  # - platform: gpio
+  #   pin: GPIO1
+  #   name: "GPIO1"
+
+  # - platform: gpio
+  #   pin: GPIO2
+  #   name: "GPIO2"
+  
+  # - platform: gpio
+  #   pin: GPIO3
+  #   name: "GPIO3"
+
+  # - platform: gpio
+  #   pin: GPIO5
+  #   name: "GPIO5"
+
+  # - platform: gpio
+  #   pin: GPIO6
+  #   name: "Not usable - Flash Clock (GPIO6)"
+
+  # - platform: gpio
+  #   pin: GPIO7
+  #   name: "Not usable - Flash Data 0 (GPIO7)"
+
+  # - platform: gpio
+  #   pin: GPIO8
+  #   name: "Not usable - Flash Data 1 (GPIO8)"
+
+  # - platform: gpio
+  #   pin: GPIO9
+  #   name: "GPIO9"
+
+  # - platform: gpio
+  #   pin: GPIO10
+  #   name: "GPIO10"
+
+  # - platform: gpio
+  #   pin: GPIO11
+  #   name: "Not usable - Flash Command (GPIO11)"
+
+  # - platform: gpio
+  #   pin: GPIO12
+  #   name: "GPIO12"
+
+  - platform: gpio
+    pin: GPIO13
+    name: "SET_KEY (GPIO13)"
+
+  # - platform: gpio
+  #   pin: GPIO14
+  #   name: "GPIO14"
+
+  # - platform: gpio
+  #   pin: GPIO15
+  #   name: "GPIO15"
+
+  # - platform: gpio
+  #   pin: GPIO16
+  #   name: "GPIO16"
+  
   # - platform: gpio
   #   pin: GPIO07
-  #   name: "RESET_KEY"
+  #   name: "Not usable - Flash Data 0 (GPIO7)"
 
   - platform: gpio
     pin: GPIO04
-    name: "FEED_KEY"
+    name: "FEED_KEY (GPIO4)"
 
 sensor:
   - platform: uptime
