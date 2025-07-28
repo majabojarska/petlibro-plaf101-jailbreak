@@ -103,7 +103,9 @@ output:
 
   # Do we actually need two motor GPIOs? 
   # We only need the motor to spin in one direction, so
-  # grounding in_b while drigin in_a high should be enough
+  # grounding in_a while driving in_b high should be enough.
+  # Pin 1 is GND, so it's easy to ground in_a, and then modwire
+  # pin 3 (in_b) straight to GPIO15
   # TODO: Solder this to KD830 IN_A pin (either pin 2 or 3, check)
   - platform: gpio
     id: motor_driver_in_a
