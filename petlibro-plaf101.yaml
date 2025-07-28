@@ -35,78 +35,44 @@ button:
       - logger.log: "Button pressed"
 
 binary_sensor:
+  # Physical buttons on the front
   - platform: gpio
-    pin: GPIO0
     name: "REC_KEY (GPIO0)"
-
-  # - platform: gpio
-  #   pin: GPIO1
-  #   name: "GPIO1"
-
-  # - platform: gpio
-  #   pin: GPIO2
-  #   name: "GPIO2"
-
-  # - platform: gpio
-  #   pin: GPIO3
-  #   name: "GPIO3"
+    id: sensor_rec_key
+    pin:
+      number: GPIO00
+      mode:
+        input: true
+        pullup: false
 
   - platform: gpio
-    pin: GPIO04
     name: "FEED_KEY (GPIO4)"
-
-  # - platform: gpio
-  #   pin: GPIO5
-  #   name: "GPIO5"
-
-  # - platform: gpio
-  #   pin: GPIO6
-  #   name: "Not usable - Flash Clock (GPIO6)"
-
-  # - platform: gpio
-  #   pin: GPIO7
-  #   name: "Not usable - Flash Data 0 (GPIO7)"
-
-  # - platform: gpio
-  #   pin: GPIO8
-  #   name: "Not usable - Flash Data 1 (GPIO8)"
-
-  # - platform: gpio
-  #   pin: GPIO9
-  #   name: "GPIO9"
-
-  # - platform: gpio
-  #   pin: GPIO10
-  #   name: "GPIO10"
-
-  # - platform: gpio
-  #   pin: GPIO11
-  #   name: "Not usable - Flash Command (GPIO11)"
-
-  # - platform: gpio
-  #   pin: GPIO12
-  #   name: "GPIO12"
+    id: sensor_feed_key
+    pin:
+      number: GPIO04
+      mode:
+        input: true
+        pullup: false
 
   - platform: gpio
-    pin: GPIO13
     name: "SET_KEY (GPIO13)"
+    id: sensor_button_set_key
+    pin:
+      number: GPIO13
+      mode:
+        input: true
+        pullup: false
 
-  # - platform: gpio
-  #   pin: GPIO14
-  #   name: "GPIO14"
-
-  # - platform: gpio
-  #   pin: GPIO15
-  #   name: "GPIO15"
-
-  # - platform: gpio
-  #   pin: GPIO16
-  #   name: "GPIO16"
-
-  # - platform: gpio
-  #   pin: GPIO07
-  #   name: "Not usable - Flash Data 0 (GPIO7)"
-
+  # Endstop on motor axle, detects 60deg rotation increments
+  # TODO: Solder this connection
+  - platform: gpio
+    name: "M_DET (GPIO12)"
+    id: sensor_motor_rotation
+    pin:
+      number: GPIO12
+      mode:
+        input: true
+        pullup: true
 
 sensor:
   - platform: uptime
@@ -134,3 +100,19 @@ output:
       mode: output
     id: led1_red
     inverted: true
+
+  # Do we actually need two motor GPIOs? 
+  # We only need the motor to spin in one direction, so
+  # grounding in_b while drigin in_a high should be enough
+  # TODO: Solder this to KD830 IN_A pin (either pin 2 or 3, check)
+  - platform: gpio
+    id: motor_driver_in_a
+    pin:
+      number: GPIO15
+      mode: output
+
+  # - platform: gpio
+  #   id: motor_driver_in_b
+  #   pin:
+  #     number: GPIO05
+  #     mode: output
