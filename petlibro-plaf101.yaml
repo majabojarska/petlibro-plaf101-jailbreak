@@ -44,6 +44,8 @@ binary_sensor:
       mode:
         input: true
         pullup: false
+    filters:
+      - invert:
 
   - platform: gpio
     name: "FEED_KEY (GPIO4)"
@@ -53,6 +55,8 @@ binary_sensor:
       mode:
         input: true
         pullup: false
+    filters:
+      - invert:
 
   - platform: gpio
     name: "SET_KEY (GPIO13)"
@@ -62,6 +66,8 @@ binary_sensor:
       mode:
         input: true
         pullup: false
+    filters:
+      - invert:
 
   # Endstop on motor axle, detects 60deg rotation increments
   # TODO: Solder this connection
@@ -73,6 +79,8 @@ binary_sensor:
       mode:
         input: true
         pullup: true
+    filters:
+      - invert:
 
 sensor:
   - platform: uptime
@@ -101,7 +109,7 @@ output:
     id: led1_red
     inverted: true
 
-  # Do we actually need two motor GPIOs? 
+  # Do we actually need two motor GPIOs?
   # We only need the motor to spin in one direction, so
   # grounding in_a while driving in_b high should be enough.
   # Pin 1 is GND, so it's easy to ground in_a, and then modwire
