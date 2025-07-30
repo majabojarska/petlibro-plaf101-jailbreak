@@ -109,20 +109,18 @@ output:
     id: led1_red
     inverted: true
 
-  # Do we actually need two motor GPIOs?
-  # We only need the motor to spin in one direction, so
-  # grounding in_a while driving in_b high should be enough.
-  # Pin 1 is GND, so it's easy to ground in_a, and then modwire
-  # pin 3 (in_b) straight to GPIO15
-  # TODO: Solder this to KD830 IN_A pin (either pin 2 or 3, check)
-  - platform: gpio
-    id: motor_driver_in_a
-    pin:
-      number: GPIO15
-      mode: output
-
-  # - platform: gpio
-  #   id: motor_driver_in_b
-  #   pin:
-  #     number: GPIO05
-  #     mode: output
+# switch:
+#   # We only need the motor to spin in one direction, so
+#   # grounding in_a while driving in_b high should be enough.
+#   # pin 3 (in_b) straight to GPIO5
+#   - platform: gpio
+#     name: motor
+#     icon: "mdi:fan"
+#     id: motor_driver_in_b
+#     pin:
+#       number: GPIO5
+#       mode: output
+#     on_turn_on:
+#       - switch.turn_on: motor_driver_in_b
+#     on_turn_off:
+#       - switch.turn_off: motor_driver_in_b
