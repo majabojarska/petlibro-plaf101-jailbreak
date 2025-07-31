@@ -120,19 +120,4 @@ switch:
       number: GPIO16
       mode: output
     inverted: true
-
-# switch:
-#   # We only need the motor to spin in one direction, so
-#   # grounding in_a while driving in_b high should be enough.
-#   # pin 3 (in_b) straight to GPIO5
-#   - platform: gpio
-#     name: motor
-#     icon: "mdi:fan"
-#     id: motor_driver_in_b
-#     pin:
-#       number: GPIO5
-#       mode: output
-#     on_turn_on:
-#       - switch.turn_on: motor_driver_in_b
-#     on_turn_off:
-#       - switch.turn_off: motor_driver_in_b
+    restore_mode: ALWAYS_OFF
