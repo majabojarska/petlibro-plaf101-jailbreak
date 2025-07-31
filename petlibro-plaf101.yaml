@@ -46,6 +46,8 @@ binary_sensor:
         pullup: false
     filters:
       - invert:
+      - delayed_on:  10ms
+      - delayed_off: 10ms
 
   - platform: gpio
     name: "FEED_KEY (GPIO4)"
@@ -57,6 +59,8 @@ binary_sensor:
         pullup: false
     filters:
       - invert:
+      - delayed_on:  10ms
+      - delayed_off: 10ms
 
   - platform: gpio
     name: "SET_KEY (GPIO13)"
@@ -68,6 +72,8 @@ binary_sensor:
         pullup: false
     filters:
       - invert:
+      - delayed_on:  10ms
+      - delayed_off: 10ms
 
   # Endstop on motor axle, detects 60deg rotation increments
   # TODO: Solder this connection
@@ -81,6 +87,8 @@ binary_sensor:
         pullup: true
     filters:
       - invert:
+      - delayed_on:  10ms
+      - delayed_off: 10ms
 
 sensor:
   - platform: uptime
