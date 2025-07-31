@@ -92,26 +92,28 @@ sensor:
     type: seconds
     name: Uptime Sensor
 
-output:
+switch:
   - platform: gpio
     pin:
       number: GPIO02
       mode: output
     id: led_on_board
     inverted: true
+    restore_mode: ALWAYS_OFF
 
-  - platform: gpio
+  - id: led2_blue
+    platform: gpio
     pin:
       number: GPIO14
       mode: output
-    id: led2_blue
     inverted: true
+    restore_mode: ALWAYS_OFF
 
-  - platform: gpio
+  - id: led1_red
+    platform: gpio
     pin:
       number: GPIO16
       mode: output
-    id: led1_red
     inverted: true
 
 # switch:
