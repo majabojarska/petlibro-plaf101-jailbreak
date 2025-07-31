@@ -28,8 +28,9 @@ wifi:
   password: !secret wifi_password
 
 button:
-  - platform: template
+  - id: virt_feed_button
     name: "Feed"
+    platform: template
     icon: "mdi:cat"
     on_press:
       - logger.log: "Button pressed"
@@ -37,8 +38,8 @@ button:
 binary_sensor:
   # Physical buttons on the front
   - platform: gpio
-    name: "REC_KEY (GPIO0)"
-    id: sensor_rec_key
+    name: "REC_button (GPIO0)"
+    id: physical_rec_button
     pin:
       number: GPIO00
       mode:
@@ -49,8 +50,8 @@ binary_sensor:
       - delayed_on_off: 25ms
 
   - platform: gpio
-    name: "FEED_KEY (GPIO4)"
-    id: sensor_feed_key
+    name: "FEED_button (GPIO4)"
+    id: physical_feed_button
     pin:
       number: GPIO04
       mode:
@@ -61,8 +62,8 @@ binary_sensor:
       - delayed_on_off: 25ms
 
   - platform: gpio
-    name: "SET_KEY (GPIO13)"
-    id: sensor_button_set_key
+    name: "SET_button (GPIO13)"
+    id: physical_set_button
     pin:
       number: GPIO13
       mode:
@@ -76,7 +77,7 @@ binary_sensor:
   # TODO: Solder this connection
   - platform: gpio
     name: "M_DET (GPIO12)"
-    id: sensor_motor_rotation
+    id: physical_motor_rotation
     pin:
       number: GPIO12
       mode:
