@@ -88,9 +88,14 @@ binary_sensor:
       - delayed_on_off: 25ms
 
 sensor:
-  - platform: uptime
+  - id: uptime_sensor
+    platform: uptime
     type: seconds
     name: Uptime Sensor
+
+  - id: rssi_sensor
+    platform: wifi_signal
+    update_interval: 30s
 
 switch:
   - platform: gpio
