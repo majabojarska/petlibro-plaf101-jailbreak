@@ -121,3 +121,17 @@ switch:
       mode: output
     inverted: true
     restore_mode: ALWAYS_OFF
+
+  # We only need the motor to spin in one direction, so
+  # grounding in_a while driving in_b high should be enough.
+  # pin 3 (in_b) straight to GPIO5
+  - id: motor_driver_in_b
+    name: motor
+    icon: "mdi:vertical-rotate-clockwise"
+    platform: gpio
+    pin:
+      number: GPIO5
+      mode: output
+    restore_mode: ALWAYS_OFF
+    disabled_by_default: true # Controls frontend presence
+
