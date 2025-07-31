@@ -77,7 +77,7 @@ binary_sensor:
   # TODO: Solder this connection
   - platform: gpio
     name: "M_DET (GPIO12)"
-    id: physical_motor_rotation
+    id: physical_motor_endstop
     pin:
       number: GPIO12
       mode:
@@ -135,3 +135,19 @@ switch:
     restore_mode: ALWAYS_OFF
     disabled_by_default: true # Controls frontend presence
 
+
+# Notes:
+# physical_motor_endstop
+#   - on_press increments the amount of scoops served
+# There needs to be a timeout on the motor runtime once feeding is started. Preferably parametrized by scoop count.
+# Perhaps the each scoop should go through a stop-run-stop cycle, each safeguarded by a timeout on a single scoop?
+#
+# Use LEDS for
+# - motor errors (jam/timeout)
+# - wifi connection signaling
+# 
+# Holding set key should work as a wifi reset function
+#   - Add AP
+# The whole thing is a state machine, so think in state transitions and triggers
+# 
+# Schedules? Could be in HASS, coulbe be here
