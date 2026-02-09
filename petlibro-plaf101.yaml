@@ -10,22 +10,28 @@ logger:
 web_server:
   port: 80
   auth:
-    username: !secret web_server_username
-    password: !secret web_server_password
+    username: !secret petlibro_plaf101_web_server_username
+    password: !secret petlibro_plaf101_web_server_password
+
+ota:
+  - platform: esphome
+    id: my_ota
+    password: !secret petlibro_plaf101_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain: !secret domain
+  min_auth_mode: WPA2
+  ap:
+    password: !secret petlibro_plaf101_wifi_ap_password
 
 captive_portal:
 
 api:
   encryption:
-    key: !secret api_encryption_key
-
-ota:
-  - platform: esphome
-    password: !secret ota_password
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+    key: !secret petlibro_plaf101_api_key
+  reboot_timeout: 0s
 
 button:
   - id: virt_feed_button
@@ -87,6 +93,9 @@ binary_sensor:
       - invert:
       - delayed_on_off: 25ms
 
+debug:
+  update_interval: 5s
+
 sensor:
   - id: uptime_sensor
     platform: uptime
@@ -97,14 +106,24 @@ sensor:
     platform: wifi_signal
     update_interval: 30s
 
+  - platform: debug
+    free:
+      name: "Heap Free"
+    fragmentation:
+      name: "Heap Fragmentation"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+
 switch:
-  - platform: gpio
-    pin:
-      number: GPIO02
-      mode: output
-    id: led_on_board
-    inverted: true
-    restore_mode: ALWAYS_OFF
+  # - platform: gpio
+  #   pin:
+  #     number: GPIO02
+  #     mode: output
+  #   id: led_on_board
+  #   inverted: true
+  #   restore_mode: ALWAYS_OFF
 
   - id: led2_blue
     platform: gpio
@@ -135,7 +154,10 @@ switch:
     restore_mode: ALWAYS_OFF
     disabled_by_default: true # Controls frontend presence
 
-
+status_led:
+  pin:
+    number: GPIO2
+    inverted: True
 # Notes:
 # physical_motor_endstop
 #   - on_press increments the amount of scoops served
@@ -145,9 +167,9 @@ switch:
 # Use LEDS for
 # - motor errors (jam/timeout)
 # - wifi connection signaling
-# 
+#
 # Holding set key should work as a wifi reset function
 #   - Add AP
 # The whole thing is a state machine, so think in state transitions and triggers
-# 
+#
 # Schedules? Could be in HASS, coulbe be here
