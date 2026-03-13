@@ -34,12 +34,15 @@ api:
   reboot_timeout: 0s
 
 button:
-  - id: virt_feed_button
-    name: "Feed"
-    platform: template
+  - platform: template
+    id: feed_once
+    name: "Feed once"
     icon: "mdi:cat"
     on_press:
-      - logger.log: "Button pressed"
+      - logger.log:
+          format: "feed_once on_press. Calling script run motor."
+          level: DEBUG
+      - script.execute: run_motor
 
 binary_sensor:
   # Physical buttons on the front
@@ -80,7 +83,6 @@ binary_sensor:
       - delayed_on_off: 25ms
 
   # Endstop on motor axle, detects 60deg rotation increments
-  # TODO: Solder this connection
   - platform: gpio
     name: "M_DET (GPIO12)"
     id: physical_motor_endstop
@@ -91,7 +93,39 @@ binary_sensor:
         pullup: true
     filters:
       - invert:
-      - delayed_on_off: 25ms
+    on_press:
+      then:
+        - logger.log:
+            format: "Endstop pressed - NOP"
+            level: DEBUG
+    on_release:
+      then:
+        - logger.log:
+            format: "Endstop released - stopping motor"
+            level: DEBUG
+
+        # Stop the motor.
+        - binary_sensor.template.publish:
+            id: is_motor_running
+            state: OFF
+
+  - platform: template
+    id: is_motor_running
+    on_press:
+      then:
+        - switch.turn_on: motor_driver_in_b
+
+        - logger.log:
+            format: "is_motor_running - on_press."
+            level: DEBUG
+
+    on_release:
+      then:
+        - switch.turn_off: motor_driver_in_b
+
+        - logger.log:
+            format: "is_motor_running - on_release"
+            level: DEBUG
 
 debug:
   update_interval: 5s
@@ -117,14 +151,6 @@ sensor:
       name: "Loop Time"
 
 switch:
-  # - platform: gpio
-  #   pin:
-  #     number: GPIO02
-  #     mode: output
-  #   id: led_on_board
-  #   inverted: true
-  #   restore_mode: ALWAYS_OFF
-
   - id: led2_blue
     platform: gpio
     pin:
@@ -152,24 +178,60 @@ switch:
       number: GPIO5
       mode: output
     restore_mode: ALWAYS_OFF
-    disabled_by_default: true # Controls frontend presence
+    disabled_by_default: false # Controls frontend presence
 
 status_led:
   pin:
     number: GPIO2
     inverted: True
-# Notes:
-# physical_motor_endstop
-#   - on_press increments the amount of scoops served
-# There needs to be a timeout on the motor runtime once feeding is started. Preferably parametrized by scoop count.
-# Perhaps the each scoop should go through a stop-run-stop cycle, each safeguarded by a timeout on a single scoop?
-#
-# Use LEDS for
-# - motor errors (jam/timeout)
-# - wifi connection signaling
-#
-# Holding set key should work as a wifi reset function
-#   - Add AP
-# The whole thing is a state machine, so think in state transitions and triggers
-#
-# Schedules? Could be in HASS, coulbe be here
+
+script:
+  - id: run_motor
+    mode: queued # More presses will accumulate
+    max_runs: 5
+    then:
+      - logger.log:
+          format: "run_motor script begin."
+          level: DEBUG
+
+      - binary_sensor.template.publish:
+          id: is_motor_running
+          state: ON
+
+      # Do nothing until the position switch turns off the motor.
+      - wait_until:
+          condition:
+            - binary_sensor.is_off: is_motor_running
+
+      - logger.log:
+          format: "run_motor script complete."
+          level: DEBUG
+
+  - id: flash_wifi_error
+    mode: restart
+    then:
+      - while:
+          condition:
+            lambda: |-
+              return true;
+          then:
+            - switch.turn_on: led1_red
+            - delay: 500ms
+            - switch.turn_off: led1_red
+            - delay: 500ms
+
+interval:
+  - interval: 2s
+    then:
+      - if:
+          condition:
+            wifi.connected:
+          then:
+            - script.stop: flash_wifi_error
+            - if:
+                condition:
+                  switch.is_off: led1_red
+                then:
+                  - switch.turn_on: led1_red
+          else:
+            - script.execute: flash_wifi_error
