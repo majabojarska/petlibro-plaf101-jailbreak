@@ -4,7 +4,7 @@ esphome:
   on_boot:
     - priority: -100
       then:
-        - switch.turn_off: motor_driver_in_b
+        - switch.turn_off: motor_driver
 
 esp8266:
   board: nodemcuv2
@@ -51,7 +51,7 @@ button:
 binary_sensor:
   # Physical buttons on the front
   - platform: gpio
-    name: "REC_button (GPIO0)"
+    name: "REC button (GPIO0)"
     id: physical_rec_button
     pin:
       number: GPIO00
@@ -63,7 +63,7 @@ binary_sensor:
       - delayed_on_off: 25ms
 
   - platform: gpio
-    name: "FEED_button (GPIO4)"
+    name: "FEED button (GPIO4)"
     id: physical_feed_button
     pin:
       number: GPIO04
@@ -77,7 +77,7 @@ binary_sensor:
       - script.execute: script_feed
 
   - platform: gpio
-    name: "SET_button (GPIO13)"
+    name: "SET button (GPIO13)"
     id: physical_set_button
     pin:
       number: GPIO13
@@ -102,7 +102,7 @@ binary_sensor:
     on_release:
       then:
         # Stop the motor.
-        - switch.turn_off: motor_driver_in_b
+        - switch.turn_off: motor_driver
 
 sensor:
   - id: uptime_sensor
@@ -134,7 +134,7 @@ switch:
   # We only need the motor to spin in one direction, so
   # grounding in_a while driving in_b high should be enough.
   # pin 3 (in_b) straight to GPIO5
-  - id: motor_driver_in_b
+  - id: motor_driver
     name: motor
     platform: gpio
     pin:
@@ -157,12 +157,12 @@ script:
           format: "script_feed script begin."
           level: DEBUG
 
-      - switch.turn_on: motor_driver_in_b
+      - switch.turn_on: motor_driver
 
       # Do nothing until the position switch turns off the motor.
       - wait_until:
           condition:
-            - switch.is_off: motor_driver_in_b
+            - switch.is_off: motor_driver
 
       - logger.log:
           format: "script_feed script complete."
