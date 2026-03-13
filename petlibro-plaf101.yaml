@@ -5,9 +5,6 @@ esphome:
     - priority: -100
       then:
         - switch.turn_off: motor_driver_in_b
-        # - binary_sensor.template.publish:
-        #     id: physical_motor_endstop
-        #     state: OFF
 
 esp8266:
   board: nodemcuv2
@@ -106,19 +103,6 @@ binary_sensor:
       then:
         # Stop the motor.
         - switch.turn_off: motor_driver_in_b
-        # - binary_sensor.template.publish:
-        #     id: is_motor_running
-        #     state: OFF
-
-  # - platform: template
-  #   id: is_motor_running
-  #   on_press:
-  #     then:
-  #       - switch.turn_on: motor_driver_in_b
-  #
-  #   on_release:
-  #     then:
-  #       - switch.turn_off: motor_driver_in_b
 
 sensor:
   - id: uptime_sensor
@@ -174,9 +158,6 @@ script:
           level: DEBUG
 
       - switch.turn_on: motor_driver_in_b
-      # - binary_sensor.template.publish:
-      #     id: is_motor_running
-      #     state: ON
 
       # Do nothing until the position switch turns off the motor.
       - wait_until:
@@ -215,11 +196,3 @@ interval:
                   - switch.turn_on: led1_red
           else:
             - script.execute: flash_wifi_error
-
-  - interval: 1s
-    then:
-      - logger.log:
-          format: "physical_motor_endstop=%d, motor_driver_in_b=%d"
-          args:
-            - "id(physical_motor_endstop).state"
-            - "id(motor_driver_in_b).state"
