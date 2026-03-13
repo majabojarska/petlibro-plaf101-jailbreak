@@ -1,6 +1,13 @@
 esphome:
   name: petlibro-plaf101
   friendly_name: Petlibro PLAF101
+  on_boot:
+    - priority: -100
+      then:
+        - switch.turn_off: motor_driver_in_b
+        # - binary_sensor.template.publish:
+        #     id: physical_motor_endstop
+        #     state: OFF
 
 esp8266:
   board: nodemcuv2
@@ -36,13 +43,13 @@ api:
 button:
   - platform: template
     id: feed_once
-    name: "Feed once"
+    name: "Feed one scoop"
     icon: "mdi:cat"
     on_press:
       - logger.log:
-          format: "feed_once on_press. Calling script run motor."
+          format: "feed_once on_press. Calling script script_feed."
           level: DEBUG
-      - script.execute: run_motor
+      - script.execute: script_feed
 
 binary_sensor:
   # Physical buttons on the front
@@ -69,6 +76,8 @@ binary_sensor:
     filters:
       - invert:
       - delayed_on_off: 25ms
+    on_press:
+      - script.execute: script_feed
 
   - platform: gpio
     name: "SET_button (GPIO13)"
@@ -93,42 +102,23 @@ binary_sensor:
         pullup: true
     filters:
       - invert:
-    on_press:
-      then:
-        - logger.log:
-            format: "Endstop pressed - NOP"
-            level: DEBUG
     on_release:
       then:
-        - logger.log:
-            format: "Endstop released - stopping motor"
-            level: DEBUG
-
         # Stop the motor.
-        - binary_sensor.template.publish:
-            id: is_motor_running
-            state: OFF
-
-  - platform: template
-    id: is_motor_running
-    on_press:
-      then:
-        - switch.turn_on: motor_driver_in_b
-
-        - logger.log:
-            format: "is_motor_running - on_press."
-            level: DEBUG
-
-    on_release:
-      then:
         - switch.turn_off: motor_driver_in_b
+        # - binary_sensor.template.publish:
+        #     id: is_motor_running
+        #     state: OFF
 
-        - logger.log:
-            format: "is_motor_running - on_release"
-            level: DEBUG
-
-debug:
-  update_interval: 5s
+  # - platform: template
+  #   id: is_motor_running
+  #   on_press:
+  #     then:
+  #       - switch.turn_on: motor_driver_in_b
+  #
+  #   on_release:
+  #     then:
+  #       - switch.turn_off: motor_driver_in_b
 
 sensor:
   - id: uptime_sensor
@@ -139,16 +129,6 @@ sensor:
   - id: rssi_sensor
     platform: wifi_signal
     update_interval: 30s
-
-  - platform: debug
-    free:
-      name: "Heap Free"
-    fragmentation:
-      name: "Heap Fragmentation"
-    block:
-      name: "Heap Max Block"
-    loop_time:
-      name: "Loop Time"
 
 switch:
   - id: led2_blue
@@ -172,13 +152,12 @@ switch:
   # pin 3 (in_b) straight to GPIO5
   - id: motor_driver_in_b
     name: motor
-    icon: "mdi:vertical-rotate-clockwise"
     platform: gpio
     pin:
       number: GPIO5
       mode: output
     restore_mode: ALWAYS_OFF
-    disabled_by_default: false # Controls frontend presence
+    disabled_by_default: true # Controls frontend presence
 
 status_led:
   pin:
@@ -186,25 +165,26 @@ status_led:
     inverted: True
 
 script:
-  - id: run_motor
+  - id: script_feed
     mode: queued # More presses will accumulate
     max_runs: 5
     then:
       - logger.log:
-          format: "run_motor script begin."
+          format: "script_feed script begin."
           level: DEBUG
 
-      - binary_sensor.template.publish:
-          id: is_motor_running
-          state: ON
+      - switch.turn_on: motor_driver_in_b
+      # - binary_sensor.template.publish:
+      #     id: is_motor_running
+      #     state: ON
 
       # Do nothing until the position switch turns off the motor.
       - wait_until:
           condition:
-            - binary_sensor.is_off: is_motor_running
+            - switch.is_off: motor_driver_in_b
 
       - logger.log:
-          format: "run_motor script complete."
+          format: "script_feed script complete."
           level: DEBUG
 
   - id: flash_wifi_error
@@ -235,3 +215,11 @@ interval:
                   - switch.turn_on: led1_red
           else:
             - script.execute: flash_wifi_error
+
+  - interval: 1s
+    then:
+      - logger.log:
+          format: "physical_motor_endstop=%d, motor_driver_in_b=%d"
+          args:
+            - "id(physical_motor_endstop).state"
+            - "id(motor_driver_in_b).state"

@@ -23,6 +23,6 @@ pip install -r requirements.txt
   - Must track the number of scoops left to feed.
   - Must clip the requested number of scoops at some max, like 5.
   - Hitting the endstop decrements the scoops count left to feed.
-- Feed functionality is iffy after a reboot. Figure this out. Something about the post-reboot init.
 - LEDs for communicating error states.
 - Export error states via binary sensors.
+- Overrun protection
